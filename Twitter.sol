@@ -14,9 +14,9 @@ contract Twitter {
     mapping(address => Tweet[] ) public tweets;
     address public owner;
 
-    // Define the events here 👇
     event TweetCreated(uint256 id, address author, string content, uint256 timestamp);
     event TweetLiked(address liker, address tweetAuthor, uint256 tweetId, uint256 newLikeCount); 
+    event TweetUnliked(address unliker, address tweetAuthor, uint256 tweetId, uint256 newLikeCount);
 
     constructor() {
         owner = msg.sender;
@@ -59,6 +59,7 @@ contract Twitter {
         require(tweets[author][id].likes > 0, "TWEET HAS NO LIKES");
         
         tweets[author][id].likes--;
+        emit TweetUnliked(msg.sender, author, id, tweets[author][id].likes);
     }
 
     function getTweet( uint _i) public view returns (Tweet memory) {
